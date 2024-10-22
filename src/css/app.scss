@@ -1,0 +1,7 @@
+// app global css in SCSS form
+@tailwind base;
+@tailwind components;
+.xyz-hidden {
+  @apply hidden;
+}
+@tailwind utilities;
