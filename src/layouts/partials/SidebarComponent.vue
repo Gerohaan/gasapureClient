@@ -63,7 +63,7 @@
     <div class="mb-4 px-4">
       <p class="pl-4 text-sm font-semibold mb-1">ADMINISTRACIÓN</p>
       <div
-        @click="handleRouter('sucy')"
+        @click="handleRouter('venta')"
         class="w-full flex items-center text-blue-400 h-10 pl-4 hover:bg-gray-200 rounded-lg cursor-pointer"
       >
         <svg

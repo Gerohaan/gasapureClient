@@ -16,14 +16,14 @@
             </svg>
           </li>
           <li class="flex items-center">
-            <a href="#" class="text-gray-600">Sucy</a>
+            <a href="#" class="text-gray-600">Venta</a>
           </li>
         </ol>
       </nav>
       <!-- breadcrumb end -->
 
       <div class="lg:flex justify-between items-center mb-6">
-        <p class="text-2xl font-semibold mb-2 lg:mb-0">Listado de Sucys</p>
+        <p class="text-2xl font-semibold mb-2 lg:mb-0">Listado de Ventas</p>
         <!-- <button
             class="bg-blue-500 hover:bg-blue-600 focus:outline-none rounded-lg px-6 py-2 text-white font-semibold shadow"
           >
@@ -44,12 +44,13 @@
             </template>
             <template v-slot:body-cell-date_begin="props">
               <q-td :props="props">
-                {{ formatDate(props.row.date_begin) }}
+                {{ formatDate(props.row.fecha) }}
               </q-td>
             </template>
             <template v-slot:body-cell-date_end="props">
               <q-td :props="props">
-                {{ formatDate(props.row.date_end) }}
+                <!-- {{ formatDate(props.row.hora) }} -->
+                {{ props.row.hora }}
               </q-td>
             </template>
             <template v-slot:body-cell-actions="props">
@@ -82,7 +83,7 @@
         icon="add"
         dense
         color="blue"
-        @click="handleRouter('addSucy')"
+        @click="handleRouter('addVenta')"
       />
     </q-page-sticky>
   </div>
@@ -92,83 +93,83 @@ import "animate.css";
 import { date } from "quasar";
 import { computed, onMounted, ref, watchEffect, watch, inject } from "vue";
 import { useRouter } from "vue-router";
-import { useSucyStore } from "../../stores/sucy";
+import { useVentaStore } from "../../stores/venta";
 import { useQuasar } from "quasar";
-const sucyStore = useSucyStore();
+const ventaStore = useVentaStore();
 const router = useRouter();
 const $q = useQuasar();
 import { useManageLayout } from "../../stores/manageLayout";
 const manageLayout = useManageLayout();
 const loading = ref(false);
 const columns = [
-  {
+  /* {
     name: "id",
     required: true,
     label: "Id",
     align: "left",
     field: (row) => row.id,
     sortable: true,
-  },
+  }, */
   {
     name: "name",
     required: true,
-    label: "Nombre",
+    label: "Razon social",
     align: "left",
-    field: (row) => row.name,
+    field: (row) => row.userClient.userName,
     format: (val) => `${val}`,
     sortable: true,
   },
   {
-    name: "date_begin",
+    name: "fecha",
     required: true,
-    label: "Fecha de inicio",
+    label: "Fecha",
     align: "left",
-    field: (row) => row.date_begin,
+    field: (row) => row.fecha,
     format: (val) => `${val}`,
     sortable: true,
   },
   {
-    name: "date_end",
+    name: "hora",
     required: true,
-    label: "Fecha de culminación",
+    label: "Hora",
     align: "left",
-    field: (row) => row.date_end,
+    field: (row) => row.hora,
     format: (val) => `${val}`,
     sortable: true,
   },
   {
-    name: "participants",
+    name: "monto",
     required: true,
-    label: "Participantes",
+    label: "Monto",
     align: "left",
-    field: (row) => row.participants,
+    field: (row) => row.monto + " Bs",
     format: (val) => `${val}`,
     sortable: true,
   },
   {
-    name: "monto_cuota",
+    name: "montoPagado",
     required: true,
-    label: "Monto cuota",
+    label: "Monto Pagado",
     align: "left",
-    field: (row) => row.monto_cuota,
+    field: (row) => row.montoPagado + " Bs",
     format: (val) => `${val}`,
     sortable: true,
   },
   {
-    name: "type_id",
+    name: "referencia",
     required: true,
-    label: "Tipo",
+    label: "Referencia",
     align: "left",
-    field: (row) => row.type_id,
+    field: (row) => row.referencia,
     format: (val) => `${val}`,
     sortable: true,
   },
   {
-    name: "user_id",
+    name: "email",
     required: true,
-    label: "Usuario",
+    label: "email",
     align: "left",
-    field: (row) => row.user_id,
+    field: (row) => row.userClient.email,
     format: (val) => `${val}`,
     sortable: true,
   },
@@ -202,11 +203,11 @@ defineOptions({
   name: "sucyComponent",
 });
 onMounted(async () => {
-  await sucyStore.sucyAll();
-  rows.value = await sucyStore.getSucy?.value;
+  await ventaStore.ventaAll();
+  rows.value = await ventaStore.getVenta?.value;
 });
 watchEffect(async () => {
-  loading.value = sucyStore.loading;
+  loading.value = ventaStore.loading;
 });
 const detailsSucy = async (id) => {};
 const confirmDelete = async (id) => {
@@ -232,8 +233,8 @@ const confirmDelete = async (id) => {
 };
 const deleteSucy = async (id) => {
   try {
-    await sucyStore.sucyDelete(id);
-    await sucyStore.sucyAll();
+    await ventaStore.sucyDelete(id);
+    await ventaStore.sucyAll();
     rows.value = await typesStore.getTypes?.value;
   } catch (error) {
     console.log(error);

@@ -21,17 +21,17 @@ const routes = [
         }
       },
       {
-        path: 'sucy',
-        name: 'sucy',
-        component: () => import('pages/sucys/indexSucy.vue'),
+        path: 'venta',
+        name: 'venta',
+        component: () => import('pages/ventas/indexVenta.vue'),
         meta: {
           authRequired: true,
         }
       },
       {
-        path: 'addSucy',
-        name: 'addSucy',
-        component: () => import('./../components/sucys/addSucyComponent.vue'),
+        path: 'addVenta',
+        name: 'addVenta',
+        component: () => import('./../components/ventas/addVentaComponent.vue'),
         meta: {
           authRequired: true,
         }

@@ -3,7 +3,7 @@ import { header, baseURL } from './../utils/headers'
 
 export async function getAll() {
   try {
-    const url = baseURL + '/sans'
+    const url = baseURL + '/ventas/list'
     const response = await axios.get(url, header)
     const responseData = await response.data
     return responseData
@@ -14,7 +14,7 @@ export async function getAll() {
 
 export async function store(param) {
   try {
-    const url = baseURL + '/sans'
+    const url = baseURL + 'ventas/add'
     const response = await axios.post(url, param, header)
     const responseData = await response.data
     return responseData
@@ -25,7 +25,7 @@ export async function store(param) {
 
 export async function destroy(id) {
   try {
-    const url = baseURL + '/sans/' + id
+    const url = baseURL + '/ventas/delete' + id
     const response = await axios.delete(url, header)
     const responseData = await response.data
     return responseData

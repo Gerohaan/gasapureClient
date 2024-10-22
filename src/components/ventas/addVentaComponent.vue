@@ -16,17 +16,22 @@
             </svg>
           </li>
           <li class="flex items-center">
-            <a href="#" class="text-gray-600">Agregar Sucy</a>
+            <a href="#" class="text-gray-600">Crear Orden</a>
           </li>
         </ol>
       </nav>
       <!-- breadcrumb end -->
 
       <div class="">
-        <q-form @submit="sendSucy()">
+        <q-form @submit="sendVenta()">
           <div class="q-pa-md example-row-equal-width">
             <div class="row">
               <div
+                class="col col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 q-pa-sm"
+              >
+                <productos-add-venta></productos-add-venta>
+              </div>
+              <!-- <div
                 class="col col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 q-pa-sm"
               >
                 <q-input
@@ -179,7 +184,7 @@
                   lazy-rules
                   :rules="[(val) => !!val || 'Campo Estatus es requerido']"
                 />
-              </div>
+              </div> -->
             </div>
             <div class="row">
               <div class="col q-pa-sm text-right">
@@ -191,7 +196,7 @@
                   style="border-radius: 8px"
                   class=""
                   no-caps
-                  label="Registrar"
+                  label="Solicitar"
                 />
               </div>
             </div>
@@ -207,9 +212,10 @@ import { date } from "quasar";
 import { computed, onMounted, ref, watchEffect, watch, inject } from "vue";
 import { useRouter } from "vue-router";
 import { useTypesStore } from "../../stores/types";
-import { useSucyStore } from "../../stores/sucy";
+import { useVentaStore } from "../../stores/venta";
+import productosAddVenta from "../ventas/component/productosAddVenta.vue";
 const typesStore = useTypesStore();
-const sucyStore = useSucyStore();
+const ventaStore = useVentaStore();
 const router = useRouter();
 const loading = ref(false);
 const loadingType = ref(false);
@@ -238,14 +244,14 @@ const usersList = [
   },
 ];
 defineOptions({
-  name: "addSucyComponent",
+  name: "addVentaComponent",
 });
 onMounted(async () => {
   await typesStore.typesAll();
 });
 watchEffect(async () => {
   loadingType.value = typesStore.loading;
-  loading.value = sucyStore.loading;
+  loading.value = ventaStore.loading;
   if (typesStore.getTypes.value) {
     typesList.value = await typesStore.getTypes.value.map((item) => {
       return {
@@ -262,7 +268,7 @@ const handleRouter = (name, params = {}, query = {}) => {
     })
     .catch(() => {});
 };
-const sendSucy = async () => {
+const sendVenta = async () => {
   const sucy = {
     name: name.value,
     participants: participants.value,
@@ -276,7 +282,7 @@ const sendSucy = async () => {
   };
 
   try {
-    await sucyStore.sucyAdd(sucy);
+    await ventaStore.sucyAdd(sucy);
     handleRouter("sucy");
   } catch (error) {
     console.log(error);

@@ -1,26 +1,30 @@
 import { defineStore } from 'pinia';
-import { getAll, store, destroy } from "./../services/sucyService"
+import { getAll, store, destroy } from "./../services/ventaService"
 import { Notify } from 'quasar'
 import { ref } from 'vue';
 
-export const useSucyStore = defineStore('sucy', {
+export const useVentaStore = defineStore('venta', {
   state: () => {
     return {
       loading: false,
-      sucy: ref([])
+      venta: ref([]),
+      productosVenta: ref([])
     };
   },
   getters: {
-    getSucy(state) {
-      return state.sucy
-    }
+    getVenta(state) {
+      return state.venta
+    },
+    getProductosVenta(state) {
+      return state.productosVenta
+    },
   },
   actions: {
 
-    async sucyAll() {
+    async ventaAll() {
       this.loading = true
       try {
-        this.sucy.value = await getAll()
+        this.venta.value = await getAll()
         this.loading = false
       } catch (error) {
         this.loading = false
@@ -35,7 +39,7 @@ export const useSucyStore = defineStore('sucy', {
       }
     },
 
-    async sucyAdd(param) {
+    async ventaAdd(param) {
       this.loading = true
       try {
         let response = await store(param)
@@ -59,7 +63,7 @@ export const useSucyStore = defineStore('sucy', {
       }
     },
 
-    async sucyDelete(id) {
+    async ventaDelete(id) {
       this.loading = true
       try {
         let response = await destroy(id)

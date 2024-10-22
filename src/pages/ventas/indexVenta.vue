@@ -1,7 +1,7 @@
 <template>
   <q-page class="flex flex-center">
     <div class="w-full animate__animated animate__fadeIn">
-      <sucy-component></sucy-component>
+      <venta-component></venta-component>
     </div>
   </q-page>
 </template>
@@ -12,11 +12,11 @@ import { date } from "quasar";
 import { computed, onMounted, ref, watchEffect, watch, inject } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "../../stores/auth";
-import sucyComponent from "../../components/sucys/sucyComponent.vue";
+import ventaComponent from "../../components/ventas/ventaComponent.vue";
 const authStore = useAuthStore();
 const router = useRouter();
 defineOptions({
-  name: "indexSucy",
+  name: "indexVenta",
 });
 const userInfo = ref({});
 watchEffect(() => {
