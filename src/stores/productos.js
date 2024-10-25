@@ -1,38 +1,34 @@
 import { defineStore } from 'pinia';
-import { getAll, store, destroy } from "./../services/ventaService"
+import { getAll, store, destroy } from "./../services/productosService"
 import { Notify } from 'quasar'
 import { ref } from 'vue';
 
-export const useVentaStore = defineStore('venta', {
+export const useProductosStore = defineStore('productos', {
   state: () => {
     return {
       loading: false,
-      venta: ref([]),
-      productosVenta: ref([]),
-      moProducts: false
+      productosList: [],
+      productosSelected: []
     };
   },
   getters: {
-    getVenta(state) {
-      return state.venta
+    getproductos(state) {
+      return state.productosList
     },
-    getProductosVenta(state) {
-      return state.productosVenta
+    getproductosSelected(state) {
+      return state.productosSelected
     },
-    getMoProducts(state) {
-      return state.moProducts
-    }
   },
   actions: {
 
-    moProductsManage(param) {
-      this.moProducts = param
+    maganeProductosSelected(param) {
+      this.productosSelected = JSON.parse(param)
     },
 
-    async ventaAll() {
+    async productosAll() {
       this.loading = true
       try {
-        this.venta.value = await getAll()
+        this.productosList = await getAll()
         this.loading = false
       } catch (error) {
         this.loading = false
@@ -47,7 +43,7 @@ export const useVentaStore = defineStore('venta', {
       }
     },
 
-    async ventaAdd(param) {
+    async productosAdd(param) {
       this.loading = true
       try {
         let response = await store(param)
@@ -71,7 +67,7 @@ export const useVentaStore = defineStore('venta', {
       }
     },
 
-    async ventaDelete(id) {
+    async productosDelete(id) {
       this.loading = true
       try {
         let response = await destroy(id)
