@@ -9,7 +9,8 @@ export const useVentaStore = defineStore('venta', {
       loading: false,
       venta: ref([]),
       productosVenta: ref([]),
-      moProducts: false
+      moProducts: false,
+      moOrder: false,
     };
   },
   getters: {
@@ -21,12 +22,19 @@ export const useVentaStore = defineStore('venta', {
     },
     getMoProducts(state) {
       return state.moProducts
+    },
+    getMoOrder(state) {
+      return state.moOrder
     }
   },
   actions: {
 
     moProductsManage(param) {
       this.moProducts = param
+    },
+
+    moOrderManage(param) {
+      this.moOrder = param
     },
 
     async ventaAll() {

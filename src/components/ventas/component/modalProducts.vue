@@ -36,7 +36,7 @@
           label="Aceptar"
           color="primary"
           :disabled="productosStore.getproductosSelected.length == 0"
-          v-close-popup
+          @click="ventaStore.moProductsManage(false)"
         />
       </q-card-actions>
     </q-card>

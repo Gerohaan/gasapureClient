@@ -8,6 +8,7 @@ export const useProductosStore = defineStore('productos', {
     return {
       loading: false,
       productosList: [],
+      productosPreSelected: [],
       productosSelected: []
     };
   },
@@ -20,9 +21,34 @@ export const useProductosStore = defineStore('productos', {
     },
   },
   actions: {
+    priceChange(cantidad, id) {
+      if (cantidad <= 0) {
+        return
+      }
+      let precio = this.productosSelected.find(item => item.id == id).precio
+      this.productosSelected.find(item => item.id == id).total = parseInt(cantidad * precio).toFixed(2);
+    },
+    addproductOrder() {
+      if (this.productosSelected.length > 0) {
+        const idsSelected = new Set(this.productosSelected.map(item => item.id));
+        this.productosPreSelected.forEach(item => {
+          if (!idsSelected.has(item.id)) {
+            this.productosSelected.push(item);
+          }
+        });
+      } else {
+        this.productosSelected = this.productosPreSelected
+      }
+      this.productosPreSelected = []
 
+    },
     maganeProductosSelected(param) {
-      this.productosSelected = JSON.parse(param)
+      this.productosPreSelected = JSON.parse(param)
+      this.productosPreSelected.forEach(item => {
+        item.cantidad = 1;
+        item.total = item.precio;
+      });
+      this.addproductOrder()
     },
 
     async productosAll() {

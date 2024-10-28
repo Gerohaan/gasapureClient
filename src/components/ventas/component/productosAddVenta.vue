@@ -34,7 +34,7 @@
             <th
               class="px-4 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-100 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left min-w-140-px"
             >
-              Accciones
+              Acciones
             </th>
           </tr>
         </thead>
@@ -48,7 +48,7 @@
           <tr
             v-else
             class="text-gray-700 dark:text-gray-100"
-            v-for="(product, index) in productosStore.getproductosSelected"
+            v-for="(product, index) in productosStore.productosSelected"
             :key="index"
           >
             <th
@@ -88,7 +88,9 @@
               class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
             >
               <q-input
-                v-model="cantidad"
+                v-model="product.cantidad"
+                :key="product.id"
+                @change="chekQuantity(product.cantidad, product.id)"
                 dense
                 type="number"
                 rounded
@@ -99,16 +101,25 @@
               class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
             >
               <div class="flex items-center">
-                <span class="mr-2"
-                  >{{ totalItems(cantidad, product.precio) }} Bs.</span
-                >
+                <span class="mr-2">{{ product.total }} Bs.</span>
               </div>
             </td>
             <td
               class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
             >
               <div class="flex items-center">
-                <span class="mr-2"></span>
+                <span class="mr-2">
+                  <q-btn
+                    dense
+                    icon="delete"
+                    flat
+                    round
+                    color="red"
+                    class=""
+                    no-caps
+                    @click="deleteItem(product.id)"
+                  />
+                </span>
               </div>
             </td>
           </tr>
@@ -120,17 +131,26 @@
 <script setup>
 import { ref, onMounted, watchEffect, watch } from "vue";
 import { useProductosStore } from "../../../stores/productos";
+import TableProducts from "./tableProducts.vue";
 const productosStore = useProductosStore();
 
 const cantidad = ref(1);
-//const totalItem = ref(0);
 
-const totalItems = (cantid, price) => {
-  console.log(cantid);
-  console.log(price);
-
-  return cantid * price;
+const chekQuantity = (quantity, id) => {
+  if (quantity <= 0) {
+    productosStore.productosSelected.find((item) => item.id == id).cantidad = 1;
+    return;
+  }
+  productosStore.priceChange(quantity, id);
 };
+
+const deleteItem = (id) => {
+  let filteritems = productosStore.productosSelected.filter(
+    (item) => item.id != id
+  );
+  productosStore.productosSelected = filteritems;
+};
+
 watchEffect(async () => {});
 defineOptions({
   name: "productosAddVenta",

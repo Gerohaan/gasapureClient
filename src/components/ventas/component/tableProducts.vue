@@ -81,6 +81,12 @@ const columns = [
     sortable: true,
   },
   {
+    name: "precio",
+    label: "Precio",
+    field: (row) => row.precio + " Bs",
+    sortable: true,
+  },
+  {
     name: "status",
     label: "Status",
     field: (row) => row.status,
@@ -109,7 +115,6 @@ onMounted(async () => {
 
 watchEffect(async () => {
   loadingProducts.value = productosStore.loading;
-
   rows.value = productosStore.getproductos;
   selected.value;
   productosStore.maganeProductosSelected(JSON.stringify(selected.value));

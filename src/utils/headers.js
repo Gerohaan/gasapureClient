@@ -3,7 +3,8 @@ const baseURL = 'http://localhost:3000';
 const header = {
   headers: {
     'Accept': 'application/json;charset=utf-8',
-    'Authorization': 'Bearer ' + gasApure
+    'Authorization': 'Bearer ' + gasApure,
+    "Content-Type": "multipart/form-data"
   }
 }
 

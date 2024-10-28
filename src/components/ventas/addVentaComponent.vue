@@ -45,12 +45,12 @@
             <div class="row">
               <div class="col q-pa-sm text-right">
                 <q-btn
-                  :loading="loading"
+                  :disable="productosStore.getproductosSelected.length == 0"
                   outline
-                  type="submit"
                   color="blue"
                   style="border-radius: 8px"
                   class=""
+                  @click="ventaStore.moOrderManage(true)"
                   no-caps
                   label="Solicitar"
                 />
@@ -60,6 +60,7 @@
         </q-form>
       </div>
       <modal-products v-if="ventaStore.moProducts"></modal-products>
+      <modal-create-order v-if="ventaStore.getMoOrder"></modal-create-order>
     </div>
   </div>
 </template>
@@ -70,10 +71,13 @@ import { computed, onMounted, ref, watchEffect, watch, inject } from "vue";
 import { useRouter } from "vue-router";
 import { useTypesStore } from "../../stores/types";
 import { useVentaStore } from "../../stores/venta";
+import { useProductosStore } from "../../stores/productos";
 import productosAddVenta from "../ventas/component/productosAddVenta.vue";
 import modalProducts from "./component/modalProducts.vue";
+import modalCreateOrder from "./component/modalCreateOrder.vue";
 const typesStore = useTypesStore();
 const ventaStore = useVentaStore();
+const productosStore = useProductosStore();
 const router = useRouter();
 const loading = ref(false);
 const loadingType = ref(false);
