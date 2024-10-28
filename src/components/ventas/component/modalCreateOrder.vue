@@ -120,7 +120,7 @@ const submitOrder = () => {
     ),
     observacion: observacions.value,
     pago: "Si",
-    comprobante: formData.append("comprobante", comprobant.value),
+    comprobante: "image123.png",
     referencia: reference.value,
     items: items,
   };

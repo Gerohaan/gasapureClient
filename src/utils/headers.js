@@ -4,7 +4,6 @@ const header = {
   headers: {
     'Accept': 'application/json;charset=utf-8',
     'Authorization': 'Bearer ' + gasApure,
-    "Content-Type": "multipart/form-data"
   }
 }
 

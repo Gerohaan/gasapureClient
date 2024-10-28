@@ -13,14 +13,14 @@ export async function getAll() {
 }
 
 export async function store(param) {
-  console.log(param);
-
   try {
     const url = baseURL + 'ventas/add'
     const response = await axios.post(url, param, header)
     const responseData = await response.data
     return responseData
   } catch (error) {
+    console.log(error);
+
     throw error
   }
 }
