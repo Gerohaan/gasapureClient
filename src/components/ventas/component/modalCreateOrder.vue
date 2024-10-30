@@ -8,75 +8,76 @@
           <q-tooltip>Cerrar</q-tooltip>
         </q-btn>
       </q-bar>
-      <q-card-section>
-        <div class="q-pa-md">
-          <q-markup-table class="col-6" separator dense>
-            <thead>
-              <tr>
-                <th class="text-left">Producto</th>
-                <th class="text-right">Cantidad</th>
-                <th class="text-right">Precio</th>
-                <th class="text-right">Total</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                v-for="(product, index) in productosStore.productosSelected"
-                :key="index"
-              >
-                <td class="text-left">{{ product.nombre }}</td>
-                <td class="text-right">{{ product.cantidad }}</td>
-                <td class="text-right">{{ product.precio }}</td>
-                <td class="text-right">{{ product.total }} Bs</td>
-              </tr>
-              <tr>
-                <th colspan="4" class="text-right">
-                  Total:
-                  {{
-                    productosStore.productosSelected.reduce(
-                      (acumulador, item) =>
-                        parseFloat(acumulador) + parseFloat(item.total),
-                      0
-                    )
-                  }}
-                  Bs
-                </th>
-              </tr>
-            </tbody>
-          </q-markup-table>
-        </div>
-      </q-card-section>
-      <q-card-section class="row">
-        <div class="col q-pa-md">
-          <q-input
-            dense
-            outlined
-            v-model="reference"
-            label="Número de referencia*"
-          />
-        </div>
-        <div class="col q-pa-md">
-          <q-file
-            accept=".jpg, image/*"
-            dense
-            outlined
-            v-model="comprobant"
-            label="Comprobante*"
-          />
-        </div>
-        <div class="col q-pa-md">
-          <q-input dense outlined v-model="observacions" label="Observación" />
-        </div>
-      </q-card-section>
-      <q-card-actions align="right">
-        <q-btn flat no-caps label="Cancelar" color="primary" />
-        <q-btn
-          no-caps
-          label="Confirmar"
-          @click="submitOrder()"
-          color="primary"
-        />
-      </q-card-actions>
+      <q-form @submit="submitOrder">
+        <q-card-section>
+          <div class="q-pa-md">
+            <q-markup-table class="col-6" separator dense>
+              <thead>
+                <tr>
+                  <th class="text-left">Producto</th>
+                  <th class="text-right">Cantidad</th>
+                  <th class="text-right">Precio</th>
+                  <th class="text-right">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  v-for="(product, index) in productosStore.productosSelected"
+                  :key="index"
+                >
+                  <td class="text-left">{{ product.nombre }}</td>
+                  <td class="text-right">{{ product.cantidad }}</td>
+                  <td class="text-right">{{ product.precio }}</td>
+                  <td class="text-right">{{ product.total }} Bs</td>
+                </tr>
+                <tr>
+                  <th colspan="4" class="text-right">
+                    Total:
+                    {{
+                      productosStore.productosSelected.reduce(
+                        (acumulador, item) =>
+                          parseFloat(acumulador) + parseFloat(item.total),
+                        0
+                      )
+                    }}
+                    Bs
+                  </th>
+                </tr>
+              </tbody>
+            </q-markup-table>
+          </div>
+        </q-card-section>
+        <q-card-section class="row">
+          <div class="col-6 q-pa-md">
+            <q-input
+              dense
+              outlined
+              v-model="reference"
+              label="Número de referencia*"
+            />
+          </div>
+          <div class="col-6 q-pa-md">
+            <q-input
+              dense
+              outlined
+              v-model="observacions"
+              label="Observación"
+            />
+          </div>
+          <div class="col q-pa-md">
+            <q-uploader
+              v-model="comprobant"
+              label="Comprobante (imagen o PDF)"
+              accept=".jpg, .jpeg, .png, .pdf"
+              @input="onFileChange"
+            />
+          </div>
+        </q-card-section>
+        <q-card-actions align="right">
+          <q-btn flat no-caps label="Cancelar" color="primary" />
+          <q-btn no-caps label="Confirmar" type="submit" color="primary" />
+        </q-card-actions>
+      </q-form>
     </q-card>
   </q-dialog>
 </template>
@@ -92,8 +93,14 @@ const reference = ref(null);
 const comprobant = ref(null);
 const observacions = ref("");
 
-const onFileChange = (event) => {
+const onFileChange = async (event) => {
   comprobant.value = event.target.files[0];
+  console.log(comprobant.value);
+  const formData = new FormData();
+  formData.append("comprobant", comprobant.value);
+  try {
+    await ventaStore.uploadComprobant(formData);
+  } catch (error) {}
 };
 
 const submitOrder = () => {
@@ -104,10 +111,6 @@ const submitOrder = () => {
       total: el.total,
     };
   });
-  const formData = new FormData();
-  formData.append("file", comprobant.value);
-  console.log(formData.append("file", comprobant.value));
-
   let ventaObjet = {
     idUserClient: 1,
     monto: productosStore.productosSelected.reduce(
@@ -120,7 +123,7 @@ const submitOrder = () => {
     ),
     observacion: observacions.value,
     pago: "Si",
-    comprobante: "image123.png",
+    comprobante: formData,
     referencia: reference.value,
     items: items,
   };

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { header, baseURL } from './../utils/headers'
+import { header, baseURL, headerUpl } from './../utils/headers'
 
 export async function getAll() {
   try {
@@ -14,8 +14,23 @@ export async function getAll() {
 
 export async function store(param) {
   try {
-    const url = baseURL + 'ventas/add'
+    const url = baseURL + '/ventas/add'
     const response = await axios.post(url, param, header)
+    const responseData = await response.data
+    return responseData
+  } catch (error) {
+    console.log(error);
+
+    throw error
+  }
+}
+
+export async function upload(param) {
+  try {
+    const url = baseURL + '/ventas/addUplo'
+    console.log(param)
+
+    const response = await axios.post(url, param, headerUpl)
     const responseData = await response.data
     return responseData
   } catch (error) {

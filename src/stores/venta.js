@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { getAll, store, destroy } from "./../services/ventaService"
+import { getAll, store, destroy, upload } from "./../services/ventaService"
 import { Notify } from 'quasar'
 import { ref } from 'vue';
 
@@ -36,7 +36,30 @@ export const useVentaStore = defineStore('venta', {
     moOrderManage(param) {
       this.moOrder = param
     },
+    async uploadComprobant(param) {
+      this.loading = true
+      try {
+        let response = await upload(param)
+        this.loading = false
+        Notify.create({
+          type: 'positive',
+          message: response.message,
+          position: 'bottom-right'
+        })
+        return response
+      } catch (error) {
 
+        this.loading = false
+        Notify.create({
+          type: 'negative',
+          message: error.response.data.message,
+          position: 'bottom-right'
+        })
+        console.log(error);
+
+        throw error
+      }
+    },
     async ventaAll() {
       this.loading = true
       try {
@@ -56,6 +79,7 @@ export const useVentaStore = defineStore('venta', {
     },
 
     async ventaAdd(param) {
+
       this.loading = true
       try {
         let response = await store(param)
@@ -67,6 +91,7 @@ export const useVentaStore = defineStore('venta', {
         })
         return response
       } catch (error) {
+
         this.loading = false
         Notify.create({
           type: 'negative',
