@@ -7,6 +7,7 @@ export const useVentaStore = defineStore('venta', {
   state: () => {
     return {
       loading: false,
+      loadingUplo: false,
       venta: ref([]),
       productosVenta: ref([]),
       moProducts: false,
@@ -37,10 +38,10 @@ export const useVentaStore = defineStore('venta', {
       this.moOrder = param
     },
     async uploadComprobant(param) {
-      this.loading = true
+      this.loadingUplo = true
       try {
         let response = await upload(param)
-        this.loading = false
+        this.loadingUplo = false
         Notify.create({
           type: 'positive',
           message: response.message,
@@ -49,7 +50,7 @@ export const useVentaStore = defineStore('venta', {
         return response
       } catch (error) {
 
-        this.loading = false
+        this.loadingUplo = false
         Notify.create({
           type: 'negative',
           message: error.response.data.message,
@@ -83,21 +84,25 @@ export const useVentaStore = defineStore('venta', {
       this.loading = true
       try {
         let response = await store(param)
+
         this.loading = false
         Notify.create({
           type: 'positive',
-          message: response.message,
+          message: "Orden creada, espere respuesta del administrador del sistema.",
           position: 'bottom-right'
         })
         return response
       } catch (error) {
 
         this.loading = false
-        Notify.create({
-          type: 'negative',
-          message: error.response.data.message,
-          position: 'bottom-right'
+        error.response.data.errors.map(item => {
+          Notify.create({
+            type: 'negative',
+            message: item.msg,
+            position: 'bottom-right'
+          })
         })
+
         console.log(error);
 
         throw error

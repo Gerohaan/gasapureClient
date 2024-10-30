@@ -65,7 +65,13 @@
             />
           </div>
           <div class="col q-pa-md">
+            <q-spinner
+              v-if="ventaStore.loadingUplo"
+              color="primary"
+              size="3em"
+            />
             <q-uploader
+              :disable="ventaStore.loadingUplo"
               v-model="comprobant"
               label="Comprobante (imagen o PDF)"
               accept=".jpg, .jpeg, .png, .pdf"
@@ -75,7 +81,14 @@
         </q-card-section>
         <q-card-actions align="right">
           <q-btn flat no-caps label="Cancelar" color="primary" />
-          <q-btn no-caps label="Confirmar" type="submit" color="primary" />
+          <q-btn
+            no-caps
+            label="Confirmar"
+            :disable="!fileUpload"
+            type="submit"
+            color="primary"
+            :loading="ventaStore.loading"
+          />
         </q-card-actions>
       </q-form>
     </q-card>
@@ -92,18 +105,18 @@ const moProduct = ref(false);
 const reference = ref(null);
 const comprobant = ref(null);
 const observacions = ref("");
-
+const fileUpload = ref(null);
 const onFileChange = async (event) => {
   comprobant.value = event.target.files[0];
-  console.log(comprobant.value);
   const formData = new FormData();
   formData.append("comprobant", comprobant.value);
   try {
-    await ventaStore.uploadComprobant(formData);
+    fileUpload.value = await ventaStore.uploadComprobant(formData);
   } catch (error) {}
 };
 
-const submitOrder = () => {
+const submitOrder = async () => {
+  if (fileUpload.value == null) return false;
   let items = productosStore.productosSelected.map((el) => {
     return {
       idProducto: el.id,
@@ -111,22 +124,34 @@ const submitOrder = () => {
       total: el.total,
     };
   });
+  let monto = productosStore.productosSelected.reduce(
+    (acumulador, item) => parseFloat(acumulador) + parseFloat(item.total),
+    0
+  );
+  let montoPagado = productosStore.productosSelected.reduce(
+    (acumulador, item) => parseFloat(acumulador) + parseFloat(item.total),
+    0
+  );
   let ventaObjet = {
-    idUserClient: 1,
-    monto: productosStore.productosSelected.reduce(
-      (acumulador, item) => parseFloat(acumulador) + parseFloat(item.total),
-      0
-    ),
-    montoPagado: productosStore.productosSelected.reduce(
-      (acumulador, item) => parseFloat(acumulador) + parseFloat(item.total),
-      0
-    ),
+    idUserClient: localStorage.getItem("idUser"),
+    emailClient: localStorage.getItem("emailUser"),
+    monto,
+    montoPagado,
     observacion: observacions.value,
-    pago: "Si",
-    comprobante: formData,
+    pago: monto == montoPagado ? "Si" : "No",
+    comprobante: fileUpload.value.file.filename,
     referencia: reference.value,
     items: items,
   };
-  ventaStore.ventaAdd(ventaObjet);
+  try {
+    await ventaStore.ventaAdd(ventaObjet);
+    productosStore.productosPreSelected = [];
+    productosStore.productosSelected = [];
+    reference.value = null;
+    comprobant.value = null;
+    observacions.value = "";
+    fileUpload.value = null;
+    ventaStore.moOrderManage(false);
+  } catch (error) {}
 };
 </script>

@@ -69,13 +69,11 @@ import "animate.css";
 import { date } from "quasar";
 import { computed, onMounted, ref, watchEffect, watch, inject } from "vue";
 import { useRouter } from "vue-router";
-import { useTypesStore } from "../../stores/types";
 import { useVentaStore } from "../../stores/venta";
 import { useProductosStore } from "../../stores/productos";
 import productosAddVenta from "../ventas/component/productosAddVenta.vue";
 import modalProducts from "./component/modalProducts.vue";
 import modalCreateOrder from "./component/modalCreateOrder.vue";
-const typesStore = useTypesStore();
 const ventaStore = useVentaStore();
 const productosStore = useProductosStore();
 const router = useRouter();
@@ -108,20 +106,9 @@ const usersList = [
 defineOptions({
   name: "addVentaComponent",
 });
-onMounted(async () => {
-  await typesStore.typesAll();
-});
+onMounted(async () => {});
 watchEffect(async () => {
-  loadingType.value = typesStore.loading;
   loading.value = ventaStore.loading;
-  if (typesStore.getTypes.value) {
-    typesList.value = await typesStore.getTypes.value.map((item) => {
-      return {
-        value: item.id,
-        label: item.name,
-      };
-    });
-  }
 });
 const handleRouter = (name, params = {}, query = {}) => {
   router

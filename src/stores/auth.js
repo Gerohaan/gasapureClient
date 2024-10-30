@@ -40,6 +40,7 @@ export const useAuthStore = defineStore('auth', {
         localStorage.setItem('gasApure', this.userInfo.value.access_token)
         localStorage.setItem('nameUser', this.userInfo.value.data.name)
         localStorage.setItem('emailUser', this.userInfo.value.data.email)
+        localStorage.setItem('idUser', this.userInfo.value.user.id)
         this.loading = false
       } catch (error) {
         this.loading = false
@@ -58,12 +59,12 @@ export const useAuthStore = defineStore('auth', {
       this.loading = true
       try {
         this.response.value = await login(param)
-        console.log(this.response.value)
 
         this.userInfo.value = this.response.value
         localStorage.setItem('gasApure', this.userInfo.value.token)
         localStorage.setItem('nameUser', this.userInfo.value.user.userName)
         localStorage.setItem('emailUser', this.userInfo.value.user.email)
+        localStorage.setItem('idUser', this.userInfo.value.user.id)
         this.loading = false
       } catch (error) {
         this.loading = false
@@ -86,6 +87,7 @@ export const useAuthStore = defineStore('auth', {
         localStorage.removeItem('gasApure')
         localStorage.removeItem('nameUser')
         localStorage.removeItem('emailUser')
+        localStorage.removeItem('idUser')
         this.loading = false
       } catch (error) {
         this.loading = false
