@@ -34,7 +34,7 @@
       <div class="">
         <div class="grid grid-cols-1 lg:grid-cols-1 gap-6 mb-6">
           <q-table
-            :rows="rows"
+            :rows="ventaStore.getVenta"
             :loading="loading"
             :columns="columns"
             row-key="id"
@@ -58,19 +58,19 @@
                 <q-btn
                   color="primary"
                   icon="visibility"
-                  @click="detailsSucy(props.row.id)"
+                  @click="detailsVenta(props.row)"
                   flat
                   round
                   dense
                 />
-                <q-btn
+                <!-- <q-btn
                   color="negative"
                   icon="delete"
                   @click="confirmDelete(props.row.id)"
                   flat
                   round
                   dense
-                />
+                /> -->
               </q-td>
             </template>
           </q-table>
@@ -86,15 +86,17 @@
         @click="handleRouter('addVenta')"
       />
     </q-page-sticky>
+    <modal-details></modal-details>
   </div>
 </template>
 <script setup>
 import "animate.css";
-import { date } from "quasar";
+import { date, Loading, QSpinnerOval } from "quasar";
 import { computed, onMounted, ref, watchEffect, watch, inject } from "vue";
 import { useRouter } from "vue-router";
 import { useVentaStore } from "../../stores/venta";
 import { useQuasar } from "quasar";
+import modalDetails from "./component/modalDetails.vue";
 const ventaStore = useVentaStore();
 const router = useRouter();
 const $q = useQuasar();
@@ -191,6 +193,7 @@ const columns = [
   },
 ];
 const rows = ref([]);
+const listItemSale = ref([]);
 const formatDate = (dateStr) => {
   const date = new Date(dateStr);
   return date.toLocaleDateString("es-ES", {
@@ -199,17 +202,41 @@ const formatDate = (dateStr) => {
     day: "numeric",
   });
 };
+const loadingShowHide = (param) => {
+  if (param == "show") {
+    Loading.show({
+      spinner: QSpinnerOval,
+      spinnerColor: "primary",
+      spinnerSize: 120,
+      backgroundColor: "cyan-1",
+      messageColor: "black",
+    });
+  } else {
+    Loading.hide();
+  }
+};
 defineOptions({
-  name: "sucyComponent",
+  name: "ventaComponent",
 });
 onMounted(async () => {
   await ventaStore.ventaAll();
-  rows.value = await ventaStore.getVenta?.value;
 });
 watchEffect(async () => {
   loading.value = ventaStore.loading;
+  /* if (ventaStore.moDetails === false) {
+    await ventaStore.ventaAll();
+  } */
 });
-const detailsSucy = async (id) => {};
+const detailsVenta = async (params) => {
+  loadingShowHide("show");
+  try {
+    listItemSale.value = await ventaStore.detalleVentas(params);
+    loadingShowHide("hide");
+  } catch (error) {
+    console.log(error);
+    loadingShowHide("hide");
+  }
+};
 const confirmDelete = async (id) => {
   $q.dialog({
     title: "Eliminar",

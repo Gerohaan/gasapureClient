@@ -12,6 +12,17 @@ export async function getAll() {
   }
 }
 
+export async function getAllDetails(param) {
+  try {
+    const url = baseURL + '/ventas/showDetails/' + param
+    const response = await axios.get(url, header)
+    const responseData = await response.data
+    return responseData
+  } catch (error) {
+    throw error
+  }
+}
+
 export async function store(param) {
   try {
     const url = baseURL + '/ventas/add'
@@ -36,6 +47,17 @@ export async function upload(param) {
   } catch (error) {
     console.log(error);
 
+    throw error
+  }
+}
+
+export async function update(param) {
+  try {
+    const url = baseURL + '/ventas/update/' + param.id
+    const response = await axios.put(url, param, header)
+    const responseData = await response.data
+    return responseData
+  } catch (error) {
     throw error
   }
 }
