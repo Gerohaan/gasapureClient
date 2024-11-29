@@ -14,7 +14,7 @@ export async function register(param) {
 
 export async function login(param) {
   try {
-    const url = baseURL + '/userClient/login'
+    const url = baseURL + '/user/login'
     const response = await axios.post(url, param, header)
     const responseData = await response.data
     return responseData
@@ -25,7 +25,7 @@ export async function login(param) {
 
 export async function logout() {
   try {
-    const url = baseURL + '/logout'
+    const url = baseURL + '/user/logout'
     const response = await axios.get(url, header)
     const responseData = await response.data
     return responseData

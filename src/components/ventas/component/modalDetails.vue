@@ -38,7 +38,7 @@
                 <th colspan="4" class="text-right">
                   Total:
                   {{
-                    productosStore.productosSelected.reduce(
+                    ventaStore.getVentaDetalle.productos.reduce(
                       (acumulador, item) =>
                         parseFloat(acumulador) + parseFloat(item.total),
                       0

@@ -70,7 +70,7 @@ export const useAuthStore = defineStore('auth', {
         this.loading = false
         Notify.create({
           type: 'negative',
-          message: error.response.data.message,
+          message: error.response.data.msg,
           position: 'bottom-right'
         })
         console.log(error);
@@ -93,7 +93,7 @@ export const useAuthStore = defineStore('auth', {
         this.loading = false
         Notify.create({
           type: 'negative',
-          message: error.response.data.message,
+          message: error.response.data.msg,
           position: 'bottom-right'
         })
         console.log(error);

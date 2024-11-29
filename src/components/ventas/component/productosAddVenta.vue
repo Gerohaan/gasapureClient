@@ -38,7 +38,6 @@
             </th>
           </tr>
         </thead>
-
         <tbody>
           <tr v-if="productosStore.getproductosSelected.length == 0">
             <th class="text-gray-700 dark:text-gray-100 p-4" colspan="5">
@@ -48,7 +47,7 @@
           <tr
             v-else
             class="text-gray-700 dark:text-gray-100"
-            v-for="(product, index) in productosStore.productosSelected"
+            v-for="(product, index) in productosStore.productosPreSelected"
             :key="index"
           >
             <th

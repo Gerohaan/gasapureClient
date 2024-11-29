@@ -130,7 +130,6 @@ const logout = () => {
     },
   })
     .onOk(async () => {
-      return;
       try {
         await authStore.logoutUser();
         handleRouter("login");

@@ -2,7 +2,7 @@ const gasApure = localStorage.getItem('gasApure')
 const baseURL = 'http://localhost:3000';
 const header = {
   headers: {
-    'Accept': 'application/json;charset=utf-8',
+    'Accept': 'application/json',
     'Authorization': 'Bearer ' + gasApure,
   }
 }

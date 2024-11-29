@@ -52,10 +52,14 @@ export async function upload(param) {
 }
 
 export async function update(param) {
+  console.log(param);
+  //return
   try {
     const url = baseURL + '/ventas/update/' + param.id
     const response = await axios.put(url, param, header)
     const responseData = await response.data
+    console.log(responseData);
+
     return responseData
   } catch (error) {
     throw error

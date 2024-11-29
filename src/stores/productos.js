@@ -39,7 +39,7 @@ export const useProductosStore = defineStore('productos', {
       } else {
         this.productosSelected = this.productosPreSelected
       }
-      this.productosPreSelected = []
+      //this.productosPreSelected = []
 
     },
     maganeProductosSelected(param) {
